@@ -1,10 +1,21 @@
 {% extends 'buscador/base.html' %}
+{% load staticfiles %}
 
 {% block content %}
 
+<title>{{ infos }}</title>
 <div class="row">
-	<div class="col-md-12 col-sm-12 col-xs-12" align="center">
-		<h1>{{ infos }}</h1>
+	<div class="col-md-12 col-sm-12 col-xs-12 buscador" align="center">
+		<div>
+			<img src="{% static 'images/busqueda_logo.png' %}">			
+		</div>
+		<div>
+			<input type="text" class="ingreso">			
+		</div>
+		<div class="busq">
+			<input class="btn btn-busq" type="submit" value="Buscar">			
+		</div>
+		
 	</div>
 	
 </div>

@@ -1,1 +1,23 @@
-estilos.css
+
+.buscador{
+	margin-top: 10%;
+}
+
+.buscador img{
+	width: 60%;
+}
+
+.ingreso{
+	margin-top: 20px;
+	width: 60%;
+}
+
+.busq{
+	margin-top: 30px;
+}
+
+.btn-busq{
+	width: 150px;
+	background-color: black!important;
+	color: white!important;
+}
