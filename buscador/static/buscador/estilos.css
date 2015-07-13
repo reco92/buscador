@@ -1,4 +1,26 @@
 
+.contenedor{
+	margin-right: 0;
+	margin-left: 0;
+}
+
+
+
+@media(min-width: 768px){
+	
+	
+}
+
+@media(max-width: 767px){
+	.contenido{
+		padding-right: 8%;
+		padding-left: 8%;
+	}	
+	
+}
+
+
+
 .buscador{
 	margin-top: 10%;
 }
@@ -20,4 +42,49 @@
 	width: 150px;
 	background-color: black!important;
 	color: white!important;
+}
+
+.barra-busq{
+	background-color: #FBFBFB;
+	padding: 2% 2% 2% 2%;
+}
+
+.barra-busq img{
+	width: 100px;
+}
+
+.ingreso2{
+	margin-right: 1%;
+	margin-left: 1%;
+	width: 40%;
+}
+
+.btn-busq2{
+	width: 60px;
+}
+
+.cant-resultados{
+	padding-top: 1%;
+	padding-bottom: 1.5%;
+	color: #808080;
+	font-size: small;
+}
+
+.resultado{
+	margin-bottom: 25px;
+}
+
+.resultado h4{
+	margin-bottom: 1px;
+	color: #1a0dab;
+}
+
+.resultado p{
+	color: #545454;
+	margin-bottom: 1px;
+}
+
+.visitas{
+	color: #808080;
+	font-size: small;
 }
