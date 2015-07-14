@@ -16,6 +16,16 @@ from buscador.models import Info
 masterKey = 'FbMRtRHcfnfYzMfzrUVZyHnp3LNm1D700epMelXqa4NcvvM6Y10PsuPsxeJdihYl2emm5guyKk49/bV92ZPOpw=='
 host = 'https://topicosbd.documents.azure.com:443/'
 
+client = document_client.DocumentClient(host,{'masterKey': masterKey})
+
+datab = list(client.ReadDatabases({'id' : 'probando'}))
+
+collections = list(client.ReadCollections(datab[0]['_self']))
+
+frase_busq = ""
+paginator = ""
+nro_resultados = 100
+
 def index(request):
 
 	infos = "Buscador"
@@ -26,94 +36,134 @@ def index(request):
 	#return HttpResponse(template.render(context))
 	return render(request, 'buscador/index.html', context)
 
-def buscador(request):
-	titulo ="buscador"
-	nro_resultados = 100
-	#infos = Info.objects.all()
-
-
-	client = document_client.DocumentClient(host,{'masterKey': masterKey})
-
-	datab = list(client.ReadDatabases({'id' : 'probando'}))
-
-	collections = list(client.ReadCollections(datab[0]['_self']))
-	#documents = list(client.ReadDocuments(collections[0]['_self']))
-	documents = list(client.QueryDocuments(
-    		collections[0]['_self'],
-			{
-            	'query': 'SELECT * FROM probando i',
-			}))
-
-	nro_resultados = len(documents)
-
-	paginator = Paginator(documents, 8) 
-
-	page = request.GET.get('page')
-	try:
-		documents = paginator.page(page)
-	except PageNotAnInteger:
-		# If page is not an integer, deliver first page.
-		documents = paginator.page(1)
-	except EmptyPage:
-		# If page is out of range (e.g. 9999), deliver last page of results.
-		documents = paginator.page(paginator.num_pages)
-
-
-
-	context = RequestContext(request, {
-		'infos': documents,
-		'titulo':titulo,
-		'nro_resul' : nro_resultados,
-		'consulta' : 'consulta'
-	})
-	return render(request, 'buscador/buscador.html',context)
-
-
-
 def consultar(request):
 	titulo ="buscador"
-	nro_resultados = 100
+	global nro_resultados
 	#infos = Info.objects.all()
+	global frase_busq
+	global paginator
 
 	if request.method == 'POST':
 		consulta = request.POST['frase']
-
-		if(consulta != ""):
-
-			client = document_client.DocumentClient(host,{'masterKey': masterKey})
-
-			datab = list(client.ReadDatabases({'id' : 'probando'}))
-
-			collections = list(client.ReadCollections(datab[0]['_self']))
+		
+		if(frase_busq != consulta and consulta != ""):
+			frase_busq = consulta
+			
 			#documents = list(client.ReadDocuments(collections[0]['_self']))
-			documents = list(client.QueryDocuments(
+			documentos = list(client.QueryDocuments(
 		    		collections[0]['_self'],
 					{
 		            	'query': 'SELECT * FROM probando i',
 					}))
 
-			nro_resultados = len(documents)
+			nro_resultados = len(documentos)
 
-			paginator = Paginator(documents, 8) 
+			paginator = Paginator(documentos, 8) 
 
 			page = request.GET.get('page')
 			try:
-				documents = paginator.page(page)
+				documentos = paginator.page(page)
 			except PageNotAnInteger:
 				# If page is not an integer, deliver first page.
-				documents = paginator.page(1)
+				documentos = paginator.page(1)
 			except EmptyPage:
 				# If page is out of range (e.g. 9999), deliver last page of results.
-				documents = paginator.page(paginator.num_pages)
+				documentos = paginator.page(paginator.num_pages)
 
 
 
 			context = RequestContext(request, {
-				'infos': documents,
+				'infos': documentos,
 				'titulo':titulo,
 				'nro_resul' : nro_resultados,
-				'consulta' : consulta,
+				'consulta' : frase_busq,
 			})
 			return render(request, 'buscador/buscador.html',context)
+
+	if(frase_busq != ""):		 
+
+		page = request.GET.get('page')
+		try:
+			documentos = paginator.page(page)
+		except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+			documentos = paginator.page(1)
+		except EmptyPage:
+			# If page is out of range (e.g. 9999), deliver last page of results.
+			documentos = paginator.page(paginator.num_pages)
+
+		context = RequestContext(request, {
+			'infos': documentos,
+			'titulo':titulo,
+			'nro_resul' : nro_resultados,
+			'consulta' : frase_busq,
+		})
+		return render(request, 'buscador/buscador.html',context)
+
+	return HttpResponseRedirect('/main/')
+
+def consultarlink(request,palabra):
+	titulo ="buscador"
+	global nro_resultados
+	#infos = Info.objects.all()
+	global frase_busq
+	global paginator
+
+	if request.method == 'GET':
+		consulta = palabra
+		
+		if(frase_busq != consulta and consulta != ""):
+			frase_busq = consulta
+			 
+			#documents = list(client.ReadDocuments(collections[0]['_self']))
+			documentos = list(client.QueryDocuments(
+		    		collections[0]['_self'],
+					{
+		            	'query': 'SELECT * FROM probando i',
+					}))
+
+			nro_resultados = len(documentos)
+
+			paginator = Paginator(documentos, 8) 
+
+			page = request.GET.get('page')
+			try:
+				documentos = paginator.page(page)
+			except PageNotAnInteger:
+				# If page is not an integer, deliver first page.
+				documentos = paginator.page(1)
+			except EmptyPage:
+				# If page is out of range (e.g. 9999), deliver last page of results.
+				documentos = paginator.page(paginator.num_pages)
+
+
+
+			context = RequestContext(request, {
+				'infos': documentos,
+				'titulo':titulo,
+				'nro_resul' : nro_resultados,
+				'consulta' : frase_busq,
+			})
+			return render(request, 'buscador/buscador.html',context)
+
+	if(frase_busq != ""):		 
+
+		page = request.GET.get('page')
+		try:
+			documentos = paginator.page(page)
+		except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+			documentos = paginator.page(1)
+		except EmptyPage:
+			# If page is out of range (e.g. 9999), deliver last page of results.
+			documentos = paginator.page(paginator.num_pages)
+
+		context = RequestContext(request, {
+			'infos': documentos,
+			'titulo':titulo,
+			'nro_resul' : nro_resultados,
+			'consulta' : frase_busq,
+		})
+		return render(request, 'buscador/buscador.html',context)
 
 	return HttpResponseRedirect('/main/')

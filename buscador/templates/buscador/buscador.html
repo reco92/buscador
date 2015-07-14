@@ -33,7 +33,7 @@
 			<div class="visitas">
 				Tags relacionados:
 				{% for tg in inf.tag %}
-					<a> {{ tg }}</a>
+					<a class="tag-link"> {{ tg }}</a>
 				{% endfor %}				
 			</div>
 			<div class="visitas">
@@ -62,9 +62,20 @@
 		</div>
 		
 	</div>
-
-
-	
 </div>
 
+<script>
+	$(document).ready(function () {
+		$('.tag-link').click(function(){
+			$('#frase').val($(this).text());
+			$('.btn-busq2').trigger('click');
+
+
+		});
+	});
+
+</script>
+
 {% endblock %}
+
+
