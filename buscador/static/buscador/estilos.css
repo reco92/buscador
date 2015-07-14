@@ -82,9 +82,36 @@
 .resultado p{
 	color: #545454;
 	margin-bottom: 1px;
+	height: 81px;
+	overflow: hidden;
 }
 
 .visitas{
 	color: #808080;
 	font-size: small;
 }
+
+.visitas a{
+	color: #808085;
+	font-size: small;
+}
+
+.step-links a{
+	color: #1a0dab;
+	font-size: 17px;
+}
+
+
+.glyphicon {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: 18px;
+  margin-left: 10px;
+  padding-right: 10px;
+ }
+
+ .btn-paginador{
+ 	margin-bottom: 3%;
+ }

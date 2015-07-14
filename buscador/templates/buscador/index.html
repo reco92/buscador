@@ -6,15 +6,18 @@
 <title>{{ infos }}</title>
 <div class="row">
 	<div class="col-md-12 col-sm-12 col-xs-12 buscador" align="center">
-		<div>
-			<img src="{% static 'images/busqueda_logo.png' %}">			
-		</div>
-		<div>
-			<input type="text" class="form-control ingreso">			
-		</div>
-		<div class="busq">
-			<input class="btn btn-busq" type="submit" value="Buscar">			
-		</div>		
+		<form action="{% url 'consultar' %}" method="post">
+			{% csrf_token %}
+			<div>
+				<img src="{% static 'images/busqueda_logo.png' %}">			
+			</div>
+			<div>
+				<input type="text" id="frase" name="frase" value="" class="form-control ingreso">	
+			</div>
+			<div class="busq">
+				<input class="btn btn-busq" type="submit" value="Buscar">			
+			</div>
+		</form>	
 	</div>
 	
 </div>

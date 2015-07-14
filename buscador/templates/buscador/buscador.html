@@ -6,12 +6,17 @@
 <title>{{ titulo }}</title>
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<form action="{% url 'consultar' %}" method="post">
+			<div class="barra-busq">
+				<a href="/main/">
+					<img src="{% static 'images/busqueda_logo.png' %}">			
+				</a>
+				<input type="text" class=" ingreso2" id="frase" name="frase" value="{{ consulta }}">
 
-		<div class="barra-busq">
-			<img src="{% static 'images/busqueda_logo.png' %}">			
-			<input type="text" class=" ingreso2">
-			<button class="btn btn-busq2" type="submit"> <i class="glyphicon glyphicon-search"></i> </button>
-		</div>
+				{% csrf_token %}
+				<button class="btn btn-busq2" type="submit"> <i class="glyphicon glyphicon-search"></i> </button>
+			</div>
+		</form>
 	</div>
 
 	<div class="col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-md-10 col-sm-10 col-xs-12 contenido">
@@ -21,10 +26,16 @@
 
 		{% for inf in infos %}
 		<div class="resultado">
-			<a href="">
+			<a>
 				<h4>{{inf.titulo}}</h4>
 			</a>
-			<p>{{inf.tags}}</p>
+			<p class="text-justify">{{ inf.noticia }}</p>
+			<div class="visitas">
+				Tags relacionados:
+				{% for tg in inf.tag %}
+					<a> {{ tg }}</a>
+				{% endfor %}				
+			</div>
 			<div class="visitas">
 				Veces visitado: 2
 			</div>
@@ -33,14 +44,14 @@
 
 	</div>
 
-	<div class="col-md-12 col-sm-12 col-xs-12">
+	<div class="col-md-12 col-sm-12 col-xs-12 btn-paginador">
 		<div class="" align="center">
 			<span class="step-links">
 				{% if infos.has_previous %}
-				<a href="?page={{ infos.previous_page_number }}"><i class="glyphicon glyphicon-circle-arrow-left"></i></a>
+				<a href="?page={{ infos.previous_page_number }}" ><i class="glyphicon glyphicon-circle-arrow-left"></i></a>
 				{% endif %}
 
-				<span class="current">
+				<span class="current" style="font-size: 15px;">
 					Página {{ infos.number }} de {{ infos.paginator.num_pages }}.
 				</span>
 
