@@ -115,3 +115,7 @@
  .btn-paginador{
  	margin-bottom: 3%;
  }
+
+ .btn-busq2 i{
+ 	top: 0px!important;
+ }
