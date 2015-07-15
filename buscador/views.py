@@ -23,9 +23,9 @@ host = 'https://topicosbd.documents.azure.com:443/'
 
 client = document_client.DocumentClient(host,{'masterKey': masterKey})
 
-datab = list(client.ReadDatabases({'id' : 'internacional'}))
+datab = list(client.ReadDatabases({'id' : 'raindb'}))
 
-collections = list(client.ReadCollections(datab[1]['_self']))
+collections = list(client.ReadCollections(datab[2]['_self']))
 
 frase_busq = ""
 paginator = ""
@@ -58,7 +58,7 @@ def consultar(request):
 			documentos = list(client.QueryDocuments(
 		    		collections[0]['_self'],
 					{
-		            	'query': 'SELECT * FROM internacional i',
+		            	'query': 'SELECT i.tag, i.titulo  FROM raindb i',
 					}))
 
 			print len(documentos)
@@ -162,7 +162,7 @@ def consultarlink(request,palabra):
 			documentos = list(client.QueryDocuments(
 		    		collections[0]['_self'],
 					{
-		            	'query': 'SELECT * FROM internacional i',
+		            	'query': 'SELECT * FROM raindb i',
 					}))
 
 			array = []
