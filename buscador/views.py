@@ -23,7 +23,11 @@ host = 'https://topicosbd.documents.azure.com:443/'
 
 client = document_client.DocumentClient(host,{'masterKey': masterKey})
 
-datab = list(client.ReadDatabases({'id' : 'internacional'}))
+datab = list(client.ReadDatabases())
+#0 pruebas
+#1 internacional
+#2 raindb
+#3 <topicosdb>
 
 collections = list(client.ReadCollections(datab[1]['_self']))
 
@@ -58,7 +62,7 @@ def consultar(request):
 			documentos = list(client.QueryDocuments(
 		    		collections[0]['_self'],
 					{
-		            	'query': 'SELECT i.tag, i.titulo  FROM internacional i',
+		            	'query': 'SELECT i.id, i.tag, i.titulo  FROM internacional i',
 					}))
 
 			print len(documentos)
@@ -145,79 +149,22 @@ def consultar(request):
 
 	return HttpResponseRedirect('/main/')
 
-def consultarlink(request,palabra):
-	titulo ="buscador"
-	global nro_resultados
-	#infos = Info.objects.all()
+
+def detalle(request):
+	iddocu = request.POST['idn']
 	global frase_busq
-	global paginator
-
-	if request.method == 'GET':
-		consulta = palabra
-		
-		if(frase_busq != consulta and consulta != ""):
-			frase_busq = consulta
-			 
-			#documents = list(client.ReadDocuments(collections[0]['_self']))
-			documentos = list(client.QueryDocuments(
-		    		collections[0]['_self'],
-					{
-		            	'query': 'SELECT * FROM internacional i',
-					}))
-
-			array = []
-			array.append(frase_busq)
-			for i in documentos:
-				array.append(i['titulo'])
-
-			print array
-
-			tfidf_vectorizer = TfidfVectorizer()
-			tfidf_matrix_train = tfidf_vectorizer.fit_transform(array)  #finds the tfidf score with normalization
-			print "cosine scores ==> ",cosine_similarity(tfidf_matrix_train[0:1], tfidf_matrix_train)  #here the first element of tfidf_matrix_train is matched with other three elements
-
-			nro_resultados = len(documentos)
-
-			paginator = Paginator(documentos, 8) 
-
-			page = request.GET.get('page')
-			try:
-				documentos = paginator.page(page)
-			except PageNotAnInteger:
-				# If page is not an integer, deliver first page.
-				documentos = paginator.page(1)
-			except EmptyPage:
-				# If page is out of range (e.g. 9999), deliver last page of results.
-				documentos = paginator.page(paginator.num_pages)
-
-
-
-			context = RequestContext(request, {
-				'infos': documentos,
-				'titulo':titulo,
-				'nro_resul' : nro_resultados,
-				'consulta' : frase_busq,
-			})
-			return render(request, 'buscador/buscador.html',context)
-
-	if(frase_busq != ""):		 
-
-		page = request.GET.get('page')
-		try:
-			documentos = paginator.page(page)
-		except PageNotAnInteger:
-			# If page is not an integer, deliver first page.
-			documentos = paginator.page(1)
-		except EmptyPage:
-			# If page is out of range (e.g. 9999), deliver last page of results.
-			documentos = paginator.page(paginator.num_pages)
-
-		context = RequestContext(request, {
-			'infos': documentos,
-			'titulo':titulo,
-			'nro_resul' : nro_resultados,
-			'consulta' : frase_busq,
-		})
-		return render(request, 'buscador/buscador.html',context)
-
-	return HttpResponseRedirect('/main/')
+	consulta = 'SELECT * FROM internacional i where i.id = @id' 
+	documento = list(client.QueryDocuments(
+		collections[0]['_self'],
+		{
+        	'query': consulta ,
+        	'parameters': [
+                    {'name':'@id', 'value':iddocu}
+                ]
+		}))
+	print documento
+	context = RequestContext(request, {
+		'documento': documento,
+		'consulta' : frase_busq,
+	})
+	return render(request, 'buscador/detalle.html',context)	

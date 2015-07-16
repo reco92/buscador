@@ -26,7 +26,7 @@
 
 		{% for inf in infos %}
 		<div class="resultado">
-			<a>
+			<a class="link-detalle" idt="{{inf.id}}">
 				<h4>{{inf.titulo}}</h4>
 			</a>
 			<!--<p class="text-justify">{{ inf.noticia }}</p>-->
@@ -59,9 +59,15 @@
 				<a href="?page={{ infos.next_page_number }}"><i class="glyphicon glyphicon-circle-arrow-right"></i></a>
 				{% endif %}
 			</span>
-		</div>
-		
+		</div>		
 	</div>
+
+	<form action="{% url 'detalle' %}" method="post">
+		{% csrf_token %}	
+		<input type="text" id="idn" name="idn" value="" class="form-control oculto">	
+
+		<input class="btn btn-busq oculto btn-detalle" type="submit" value="Mostrar detalle">
+	</form>
 </div>
 
 <script>
@@ -69,7 +75,12 @@
 		$('.tag-link').click(function(){
 			$('#frase').val($(this).text());
 			$('.btn-busq2').trigger('click');
+		});
 
+		$('.link-detalle').click(function(){
+			//alert($(this).attr('idt'));
+			$('#idn').val($(this).attr('idt'));
+			$('.btn-detalle').trigger('click');
 
 		});
 	});

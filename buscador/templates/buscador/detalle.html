@@ -1,0 +1,48 @@
+{% extends 'buscador/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<title>Buscador</title>
+<div class="row">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<form action="{% url 'consultar' %}" method="post">
+			<div class="barra-busq">
+				<a href="/main/">
+					<img src="{% static 'images/busqueda_logo.png' %}">			
+				</a>
+				<input type="text" class=" ingreso2" id="frase" name="frase" value="{{ consulta }}">
+
+				{% csrf_token %}
+				<button class="btn btn-busq2" type="submit"> <i class="glyphicon glyphicon-search"></i> </button>
+			</div>
+		</form>
+	</div>
+
+	<div class="col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-md-10 col-sm-10 col-xs-12 contenido">
+		<!--{% for inf in infos %}
+			<h1> {{ inf.titulo }}</h1>
+			<p> {{ inf.noticia }}</p>
+		{% endfor %}-->
+		{% for inf in documento %}
+			<h1 align="center"> {{ inf.titulo }}</h1>
+			<pre> {{ inf.noticia }}</pre>
+		{% endfor %}
+	</div>		
+</div>
+
+<script>
+	$(document).ready(function () {
+		$('.tag-link').click(function(){
+			$('#frase').val($(this).text());
+			$('.btn-busq2').trigger('click');
+
+
+		});
+	});
+
+</script>
+
+{% endblock %}
+
+
